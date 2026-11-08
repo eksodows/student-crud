@@ -47,7 +47,6 @@ services:
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
     plan: free
-    region: oregon
     routes:
       - type: rewrite
         source: /*
@@ -65,7 +64,5 @@ services:
 databases:
   - name: student-db
     databaseName: db_user
-    user: postgres
     plan: free
     region: oregon
-
