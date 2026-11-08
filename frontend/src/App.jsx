@@ -5,7 +5,7 @@ import StudentTable from './components/StudentTable';
 import StudentModal from './components/StudentModal';
 import DeleteModal from './components/DeleteModal';
 import Toast from './components/Toast';
-import { studentApi } from './api/studentApi';
+import { studentApi, BACKEND_URL } from './api/studentApi';
 import { AlertCircle, ServerOff } from 'lucide-react';
 
 export default function App() {
@@ -45,7 +45,7 @@ export default function App() {
         err.response?.status === 504;
 
       const message = isConnectionRefused
-        ? 'Could not connect to Spring Boot backend at http://localhost:8080. Please ensure the backend is running.'
+        ? `Could not connect to Spring Boot backend at ${BACKEND_URL}. Please ensure the backend is running.`
         : err.response?.data || err.message || 'Failed to load students.';
 
       setApiError(message);
@@ -137,13 +137,10 @@ export default function App() {
               <h4 className="text-sm font-semibold">Backend Connection Warning</h4>
               <p className="text-xs text-amber-700 mt-1 leading-relaxed">{apiError}</p>
               <div className="mt-2 text-xs text-amber-800">
-                <span>Tip: Run your Spring Boot application (</span>
+                <span>Target backend: </span>
                 <code className="bg-amber-100/70 px-1.5 py-0.5 rounded font-mono">
-                  ./mvnw spring-boot:run
+                  {BACKEND_URL}
                 </code>
-                <span> or via your IDE in the </span>
-                <code className="bg-amber-100/70 px-1.5 py-0.5 rounded font-mono">student</code>
-                <span> directory).</span>
               </div>
             </div>
             <button

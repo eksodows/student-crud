@@ -1,12 +1,18 @@
 import axios from 'axios';
 
-let apiBaseUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
-if (apiBaseUrl && !apiBaseUrl.startsWith('http://') && !apiBaseUrl.startsWith('https://')) {
-  apiBaseUrl = `https://${apiBaseUrl}`;
-}
+const rawApiUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
+
+const DEFAULT_PROD_URL = 'https://student-backend-vzzi.onrender.com';
+const DEFAULT_DEV_URL = 'http://localhost:8080';
+
+export const BACKEND_URL = rawApiUrl
+  ? (rawApiUrl.startsWith('http://') || rawApiUrl.startsWith('https://') ? rawApiUrl : `https://${rawApiUrl}`)
+  : (import.meta.env.PROD ? DEFAULT_PROD_URL : DEFAULT_DEV_URL);
+
+export const API_BASE_URL = `${BACKEND_URL}/hernandez/students`;
 
 const api = axios.create({
-  baseURL: apiBaseUrl ? `${apiBaseUrl}/hernandez/students` : '/hernandez/students',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
