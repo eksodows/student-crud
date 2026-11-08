@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.util.Optional;
 
 @Controller
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 @RequestMapping(path="/hernandez/students")
 public class StudentController {
 
