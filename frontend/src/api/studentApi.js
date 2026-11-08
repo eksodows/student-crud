@@ -1,14 +1,30 @@
 import axios from 'axios';
 
-const rawApiUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
+function getBackendUrl() {
+  let url = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
 
-const DEFAULT_PROD_URL = 'https://student-backend-vzzi.onrender.com';
-const DEFAULT_DEV_URL = 'http://localhost:8080';
+  // If empty, fall back based on build mode
+  if (!url) {
+    url = import.meta.env.PROD
+      ? 'https://student-backend-vzzi.onrender.com'
+      : 'http://localhost:8080';
+  }
 
-export const BACKEND_URL = rawApiUrl
-  ? (rawApiUrl.startsWith('http://') || rawApiUrl.startsWith('https://') ? rawApiUrl : `https://${rawApiUrl}`)
-  : (import.meta.env.PROD ? DEFAULT_PROD_URL : DEFAULT_DEV_URL);
+  // Ensure protocol is present
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = `https://${url}`;
+  }
 
+  // Prevent truncated Render hostnames (missing .onrender.com)
+  if (url.includes('student-backend') && !url.includes('.onrender.com') && !url.includes('localhost')) {
+    url = `${url}.onrender.com`;
+  }
+
+  return url;
+}
+
+export const BACKEND_URL = getBackendUrl();
+export const HEALTH_URL = `${BACKEND_URL}/health`;
 export const API_BASE_URL = `${BACKEND_URL}/hernandez/students`;
 
 const api = axios.create({
@@ -19,6 +35,12 @@ const api = axios.create({
 });
 
 export const studentApi = {
+  // Health check endpoint
+  checkHealth: async () => {
+    const response = await axios.get(HEALTH_URL);
+    return response.data;
+  },
+
   // Fetch all students
   getAll: async () => {
     const response = await api.get('');

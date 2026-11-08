@@ -33,9 +33,15 @@ export default function App() {
     setLoading(true);
     setApiError(null);
     try {
+      try {
+        await studentApi.checkHealth();
+      } catch (healthErr) {
+        console.warn('Backend health check warning:', healthErr);
+      }
       const data = await studentApi.getAll();
       // Ensure data is array
       setStudents(Array.isArray(data) ? data : []);
+      setApiError(null);
     } catch (err) {
       console.error('Failed to fetch students:', err);
       const isConnectionRefused =
