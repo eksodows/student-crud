@@ -20,6 +20,5 @@ COPY --from=build /app/target/*.jar app.jar
 ENV PORT=8080
 EXPOSE 8080
 
-# Convert Render DATABASE_URL (postgres:// or postgresql://) to jdbc:postgresql:// if present
-ENTRYPOINT ["sh", "-c", "if [ -n \"$DATABASE_URL\" ] && [ -z \"$SPRING_DATASOURCE_URL\" ]; then export SPRING_DATASOURCE_URL=$(echo \"$DATABASE_URL\" | sed -e 's/^postgres:\\/\\//jdbc:postgresql:\\/\\//' -e 's/^postgresql:\\/\\//jdbc:postgresql:\\/\\//'); fi; exec java -Dserver.port=${PORT} -jar app.jar"]
-
+# Run Spring Boot application
+ENTRYPOINT ["sh", "-c", "exec java -Dserver.port=${PORT} -jar app.jar"]
